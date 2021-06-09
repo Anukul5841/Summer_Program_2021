@@ -1,0 +1,141 @@
+#-------------------------------------------------TASK_4.1-------------------------------------------------
+                             
+    
+import cv2
+import numpy as np
+photo = np.zeros(((500,500,3))) +55
+photo.shape
+while True:
+    photo = cv2.circle(photo,(250,250),100,(255,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.ellipse(photo,(230,190),(15,22),0,0,360,(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.ellipse(photo,(270,190),(15,22),0,0,360,(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.circle(photo,(250,214),15,(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.ellipse(photo,(250,270),(70,80),0,-62,242,(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.ellipse(photo,(250,275),(44,40),0,0,180,(0,0,255),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo[190:194,227:231] = [0,0,0]
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo[190:194,268:272] = [0,0,0]
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo[230:315,248:251] = [0,0,0]
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.line(photo,(170,242),(240,270),(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.line(photo,(170,225),(240,255),(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.line(photo,(170,260),(240,285),(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.line(photo,(330,242),(260,270),(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.line(photo,(330,225),(260,255),(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(500)==13:
+        break
+    photo = cv2.line(photo,(330,260),(260,285),(0,0,0),2)
+    cv2.imshow('hi',photo)
+    if cv2.waitKey(10)==13:
+        break
+
+cv2.destroyAllWindows()
+
+
+#------------------------------------------------------------------TASK_4.2--------------------------------------------------------------------------------------------
+
+import cv2
+#Read Image 1
+img1 = cv2.imread('C:/Users/pc1/Downloads/p1.jpg',cv2.IMREAD_COLOR)
+cv2.imshow('p1',img1)
+cv2.waitKey()
+cv2.destroyAllWindows()
+#Read image 2
+img2 = cv2.imread('C:/Users/pc1/Downloads/p2.jpg',cv2.IMREAD_COLOR)
+cv2.imshow('p1',img2)
+cv2.waitKey()
+cv2.destroyAllWindows()
+#crop the portion you want to swap 
+crop1 = img1[20:160,60:200]
+#create copy of crop portion
+new_crop1 = crop1.copy()
+#CROPPED IMAGE 1
+cv2.imshow('crop1',crop1)
+cv2.waitKey()
+cv2.destroyAllWindows()
+#crop the portion you want to swap
+crop2 = img2[20:160,60:205]
+#CROPPED IMAGE 2
+cv2.imshow('crop2',crop2)
+cv2.waitKey()
+cv2.destroyAllWindows()
+s1 = crop1.shape
+s2 = crop2.shape
+#Resized the cropped IMAGE'S
+resize1 = cv2.resize(crop2,(s1[0],s1[1]))
+resize2 = cv2.resize(new_crop1,(s2[1],s2[0]))
+#SWAP THE CROPPED IAMGE'S
+img1[20:160,60:200] = resize1
+img2[20:160,60:205]=resize2
+#NEW IMAGE 1
+cv2.imshow('new_img1',img1)
+cv2.waitKey()
+cv2.destroyAllWindows()
+#NEW IMAGE 2
+cv2.imshow('new_img2',img2)
+cv2.waitKey()
+cv2.destroyAllWindows()
+
+
+#--------------------------------------------------------TASK_4.3-----------------------------------------------------------------------------
+
+import cv2
+import numpy as np
+#Read image 1
+img1 = cv2.imread('img1.png',cv2.IMREAD_COLOR)
+cv2.imshow('Image_1',img1)
+cv2.waitKey()
+cv2.destroyAllWindows()
+#Read image 2
+img2 = cv2.imread('img2.jpg',cv2.IMREAD_COLOR)
+cv2.imshow('Image_2',img2)
+cv2.waitKey()
+cv2.destroyAllWindows()
+img1.shape
+img2.shape
+img1 = cv2.resize(img1,(400,400))
+img2 = cv2.resize(img2,(400,400))
+img1.shape
+img2.shape
+final_img = np.hstack((img1,img2))
+cv2.imshow('Final_Image',final_img)
+cv2.waitKey()
+cv2.destroyAllWindows()
