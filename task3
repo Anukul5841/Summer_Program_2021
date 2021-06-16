@@ -1,0 +1,72 @@
+#--------------------------------------------TASK_3(vIDEO_CHAT_APP)----------------------------------------------------------------
+#SERVER CODE
+import cv2,socket,numpy as np,threading
+s = socket.socket()
+s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+port = 1234
+ip=""
+s.bind((ip,port))
+s.listen()
+c,addr = s.accept()
+cap = cv2.VideoCapture('http://192.168.43.1:8080/video')#Use my mobile phone camera
+def recv():
+    while True:
+        try:
+            p = c.recv(20000000)
+            p = np.frombuffer(p,dtype=np.uint8)
+            p = p.reshape((300,300,3))
+            cv2.imshow('client video',p)
+            if cv2.waitKey(10)==13:
+                cap.release()
+                cv2.destroyAllWindows()
+                break
+        except:
+            print('Not recv from client')
+def send():
+    while True:
+        try:
+            ret,photo = cap.read()
+            photo = cv2.resize(photo,(300,300))
+            photo = photo.tobytes()
+            if ret:
+                c.send(photo)
+        except:
+            print('Not send to client')
+t1=threading.Thread(target=recv)
+t1.start()
+t2=threading.Thread(target=send)
+t2.start()
+
+#-------------------------------------------------------------------------------------------------------------------------------
+#CLIENT CODE
+import socket,cv2,numpy as np,threading
+skt = socket.socket()
+skt.connect(("192.168.99.1" , 1234))
+cap = cv2.VideoCapture(0)
+def send():
+    while True:
+        try:
+            ret,photo = cap.read()
+            photo = cv2.resize(photo,(300,300))
+            if ret:
+                photo = photo.tobytes()
+                skt.send(photo)
+        except:
+            print('not send to server')
+def recv():
+    while True:
+        try:
+            data = skt.recv(70000000)
+            data = np.frombuffer(data,dtype=np.uint8)
+            data = data.reshape((300,300,3))
+            cv2.imshow('server video',data)
+            if cv2.waitKey(10)==13:
+                cap.release()
+                cv2.destroyAllWindows()
+                break
+        except:
+            print('Not recv from server')
+t1=threading.Thread(target=send)
+t1.start()
+t2=threading.Thread(target=recv)
+t2.start()
