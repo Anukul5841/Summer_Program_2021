@@ -1,0 +1,380 @@
+-------------------------------------------------TASK-6 ---------------------------------------------------------------------
+# Create training for my face model 
+
+import cv2
+import numpy as np
+
+# Load HAAR face classifier
+face_classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+# Load functions
+def face_extractor(img):
+    # Function detects faces and returns the cropped face
+    # If no face detected, it returns the input image
+    
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+    
+    if faces is ():
+        return None
+    
+    # Crop all faces found
+    for (x,y,w,h) in faces:
+        cropped_face = img[y:y+h, x:x+w]
+
+    return cropped_face
+
+# Initialize Webcam
+cap = cv2.VideoCapture(0)
+count = 0
+
+# Collect 100 samples of your face from webcam input
+while True:
+
+    ret, frame = cap.read()
+    if face_extractor(frame) is not None:
+        count += 1
+        face = cv2.resize(face_extractor(frame), (200, 200))
+        face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+
+        # Save file in specified directory with unique name
+        file_name_path = './faces/user3/' + str(count) + '.jpg'
+        cv2.imwrite(file_name_path, face)
+
+        # Put count on images and display live count
+        cv2.putText(face, str(count), (50, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 2)
+        cv2.imshow('Face Cropper', face)
+        
+    else:
+        #print("Face not found")
+        pass
+
+    if cv2.waitKey(1) == 13 or count == 100: #13 is the Enter Key
+        break
+        
+cap.release()
+cv2.destroyAllWindows()      
+print("Collecting Samples Complete")
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Create training data for my friend's face model
+
+import cv2
+import numpy as np
+
+# Load HAAR face classifier
+face_classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+# Load functions
+def face_extractor(img):
+    # Function detects faces and returns the cropped face
+    # If no face detected, it returns the input image
+    
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+    
+    if faces is ():
+        return None
+    
+    # Crop all faces found
+    for (x,y,w,h) in faces:
+        cropped_face = img[y:y+h, x:x+w]
+
+    return cropped_face
+
+# Initialize Webcam
+cap = cv2.VideoCapture(0)
+count = 0
+
+# Collect 100 samples of your face from webcam input
+while True:
+
+    ret, frame = cap.read()
+    if face_extractor(frame) is not None:
+        count += 1
+        face = cv2.resize(face_extractor(frame), (200, 200))
+        face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+
+        # Save file in specified directory with unique name
+        file_name_path = './faces/user4/' + str(count) + '.jpg'
+        cv2.imwrite(file_name_path, face)
+
+        # Put count on images and display live count
+        cv2.putText(face, str(count), (50, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 2)
+        cv2.imshow('Face Cropper', face)
+        
+    else:
+        #print("Face not found")
+        pass
+
+    if cv2.waitKey(1) == 13 or count == 100: #13 is the Enter Key
+        break
+        
+cap.release()
+cv2.destroyAllWindows()      
+print("Collecting Samples Complete")
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# My face model
+
+import cv2
+import numpy as np
+from os import listdir
+from os.path import isfile, join
+
+# Get the training data we previously made
+data_path = './faces/user3/'
+onlyfiles = [f for f in listdir(data_path) if isfile(join(data_path, f))]
+
+# Create arrays for training data and labels
+Training_Data, Labels = [], []
+
+# Open training images in our datapath
+# Create a numpy array for training data
+for i, files in enumerate(onlyfiles):
+    image_path = data_path + onlyfiles[i]
+    images = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    Training_Data.append(np.asarray(images, dtype=np.uint8))
+    Labels.append(i)
+
+# Create a numpy array for both training data and labels
+Labels = np.asarray(Labels, dtype=np.int32)
+
+# Initialize facial recognizer
+# model = cv2.face.createLBPHFaceRecognizer()
+# NOTE: For OpenCV 3.0 use cv2.face.createLBPHFaceRecognizer()
+# pip install opencv-contrib-python
+# model = cv2.createLBPHFaceRecognizer()
+
+myface_model  = cv2.face_LBPHFaceRecognizer.create()
+# Let's train our model 
+myface_model.train(np.asarray(Training_Data), np.asarray(Labels))
+print(" My face model trained sucessefully....")
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# My friend's face model
+import cv2
+import numpy as np
+from os import listdir
+from os.path import isfile, join
+import time
+
+# Get the training data we previously made
+data_path = './faces/user4/'
+onlyfiles = [f for f in listdir(data_path) if isfile(join(data_path, f))]
+
+# Create arrays for training data and labels
+Training_Data, Labels = [], []
+
+# Open training images in our datapath
+# Create a numpy array for training data
+for i, files in enumerate(onlyfiles):
+    image_path = data_path + onlyfiles[i]
+    images = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    Training_Data.append(np.asarray(images, dtype=np.uint8))
+    Labels.append(i)
+
+# Create a numpy array for both training data and labels
+Labels = np.asarray(Labels, dtype=np.int32)
+
+# Initialize facial recognizer
+# model = cv2.face.createLBPHFaceRecognizer()
+# NOTE: For OpenCV 3.0 use cv2.face.createLBPHFaceRecognizer()
+# pip install opencv-contrib-python
+# model = cv2.createLBPHFaceRecognizer()
+
+friend_model  = cv2.face_LBPHFaceRecognizer.create()
+# Let's train our model 
+friend_model.train(np.asarray(Training_Data), np.asarray(Labels))
+print("Friend's face model trained sucessefully...")
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Run my facial recognition
+
+import cv2
+import numpy as np
+import os
+import pywhatkit
+import smtplib
+import getpass
+import time
+
+face_classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+def face_detector(img, size=0.5):
+    
+    # Convert image to grayscale
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+    if faces is ():
+        return img, []
+    
+    
+    for (x,y,w,h) in faces:
+        cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,255),2)
+        roi = img[y:y+h, x:x+w]
+        roi = cv2.resize(roi, (200, 200))
+    return img, roi
+
+
+# Open Webcam
+cap = cv2.VideoCapture(0)
+count=0
+while True:
+
+    ret, frame = cap.read()
+    
+    image, face = face_detector(frame)
+    
+    try:
+        face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+
+        # Pass face to prediction model
+        # "results" comprises of a tuple containing the label and the confidence value
+        results = myface_model.predict(face)
+        
+        if results[1] < 500:
+            confidence = int( 100 * (1 - (results[1])/400) )
+            display_string = str(confidence) + '% Confident it is User'
+            
+        cv2.putText(image, display_string, (100, 120), cv2.FONT_HERSHEY_COMPLEX, 1, (255,120,150), 2)
+        
+        if (confidence > 85):
+            cv2.putText(image, "Hii Anukul", (250, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 2)
+            cv2.imshow('Face Recognition', image )
+            s = smtplib.SMTP('smtp.gmail.com',587)
+            s.starttls()
+            pas = getpass.getpass('Password:')
+            s.login("sender_email",pas)
+            message="This is face of anukul..."
+            s.sendmail("sender_email","receiver_email",message)
+            print("Email send...")
+            s.quit()
+            time.sleep(5)
+            pywhatkit.sendwhatmsg_instantly('whatsapp no. with country code','Hello from anukul..')
+            print("Whatsapp msg send...")
+            break
+            
+        else:
+            
+            cv2.putText(image, "I dont know you", (250, 400), cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,255), 2)
+            cv2.imshow('Face Recognition', image )
+
+    except:
+        cv2.putText(image, "No Face Found", (220, 120) , cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,255), 2)
+        cv2.putText(image, "looking for face", (250, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,255), 2)
+        cv2.imshow('Face Recognition', image )
+        pass
+        
+    if cv2.waitKey(1) == 13: #13 is the Enter Key
+        break
+
+
+cap.release()
+cv2.destroyAllWindows()     
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Run friend facial recognition
+
+import cv2
+import numpy as np
+import os
+import time
+
+face_classifier = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
+def face_detector(img, size=0.5):
+    
+    # Convert image to grayscale
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+    if faces is ():
+        return img, []
+    
+    
+    for (x,y,w,h) in faces:
+        cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,255),2)
+        roi = img[y:y+h, x:x+w]
+        roi = cv2.resize(roi, (200, 200))
+    return img, roi
+
+
+# Open Webcam
+cap = cv2.VideoCapture(0)
+count=0
+while True:
+
+    ret, frame = cap.read()
+    
+    image, face = face_detector(frame)
+    
+    try:
+        face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+
+        # Pass face to prediction model
+        # "results" comprises of a tuple containing the label and the confidence value
+        results1 = friend_model.predict(face)
+        
+        if results[1] < 500:
+            confidence = int( 100 * (1 - (results[1])/400) )
+            display_string = str(confidence) + '% Confident it is User '
+            
+        cv2.putText(image, display_string, (100, 120), cv2.FONT_HERSHEY_COMPLEX, 1, (255,120,150), 2)
+        
+        if (confidence > 75):
+            cv2.putText(image, "Hello!!!", (250, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 2)
+            cv2.imshow('Face Recognition', image )
+            os.system("terraform init") 
+            time.sleep(5)
+            os.system("terraform apply -auto-approve") # use terraform to launch ec2 instance and for creating EBS volume 
+            print("Instance Launched successfully...")
+            print("Volume Created successfully...")
+            print("Volume is Successfully attached to the instance")
+            break
+            
+        else:
+            
+            cv2.putText(image, "I dont know you", (250, 400), cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,255), 2)
+            cv2.imshow('Face Recognition', image )
+
+    except:
+        cv2.putText(image, "No Face Found", (220, 120) , cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,255), 2)
+        cv2.putText(image, "looking for face", (250, 450), cv2.FONT_HERSHEY_COMPLEX, 1, (0,0,255), 2)
+        cv2.imshow('Face Recognition', image )
+        pass
+        
+    if cv2.waitKey(1) == 13: #13 is the Enter Key
+        break
+
+
+cap.release()
+cv2.destroyAllWindows()     
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# terraform code 
+
+provider "aws" {
+  region = "ap-south-1"
+  profile = "default"
+}
+
+resource "aws_instance"  "task_6"  {
+  ami           = "ami-0ad704c126371a549"
+  instance_type = "t2.micro"
+  availability_zone  = "ap-south-1a"
+
+ tags = {
+  Name = "Task6_OS"
+ }
+}
+
+resource "aws_ebs_volume" "task6_vol" {
+  availability_zone = "ap-south-1a"
+  size              = 5
+
+  tags = {
+    Name = "Task6_vol"
+  }
+}
+
+resource "aws_volume_attachment" "ebs_attach" {
+  device_name = "/dev/sdh"
+  volume_id   = aws_ebs_volume.task6_vol.id
+  instance_id = aws_instance.task_6.id
+}
+
+
